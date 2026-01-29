@@ -20,4 +20,12 @@ class AddReviewResponse {
           .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'error': error,
+      'message': message,
+      'customerReviews': customerReviews?.map((x) => x.toJson()).toList(),
+    };
+  }
 }

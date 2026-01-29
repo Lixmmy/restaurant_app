@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/core/config/config.dart';
 import 'package:restaurant_app/core/config/route_endpoint.dart';
-import 'package:restaurant_app/core/model/detail_restaurant.dart';
 import 'package:restaurant_app/core/response/add_review_response.dart';
+import 'package:restaurant_app/core/response/detail_restaurant_response.dart';
 import 'package:restaurant_app/core/response/list_restaurants_response.dart';
 import 'package:restaurant_app/core/response/search_restaurant_response.dart';
 
@@ -58,12 +58,12 @@ class ApiService {
     return ListRestaurantsResponse.fromJson(response);
   }
 
-  Future<DetailRestaurant> getDetailRestaurant(String id) async {
+  Future<DetailRestaurantResponse> getDetailRestaurant(String id) async {
     final response = await _requestGet(
       '$detailRestaurant/$id',
       'informasi tentang restaurant ini tidak ditemukan',
     );
-    return DetailRestaurant.fromJson(response);
+    return DetailRestaurantResponse.fromJson(response);
   }
 
   Future<SearchRestaurantResponse> searchRestaurant(String query) async {

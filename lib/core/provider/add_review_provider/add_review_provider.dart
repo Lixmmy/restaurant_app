@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
-import 'package:restaurant_app/features/provider/add_review_provider/add_review_state.dart';
+import 'package:restaurant_app/core/provider/add_review_provider/add_review_state.dart';
 
 class AddReviewProvider extends ChangeNotifier {
   final ApiService _apiService;

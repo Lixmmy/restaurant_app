@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
-import 'package:restaurant_app/features/provider/list_restaurant_provider/list_restaurant_state.dart';
+import 'package:restaurant_app/core/provider/list_restaurant_provider/list_restaurant_state.dart';
 
 class ListRestaurantProvider extends ChangeNotifier {
   final ApiService _apiService;
 
-  ListRestaurantProvider(this._apiService);
+  ListRestaurantProvider(this._apiService) {
+    getListRestaurant();
+  }
 
   ListRestaurantState _state = ListRestaurantInitial();
 

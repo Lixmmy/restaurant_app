@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
-import 'package:restaurant_app/features/provider/detail_restaurant_provider/detail_restaurant_state.dart';
+import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_state.dart';
 
 class DetailRestaurantProvider extends ChangeNotifier {
   final ApiService _apiService;

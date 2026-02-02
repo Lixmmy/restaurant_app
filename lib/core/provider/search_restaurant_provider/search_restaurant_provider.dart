@@ -22,7 +22,7 @@ class SearchRestaurantProvider extends ChangeNotifier {
         );
         notifyListeners();
       } else {
-        _state = SearchRestaurantSuccess(restaurants: response.restaurants!);
+        _state = SearchRestaurantSuccess(restaurants: response.restaurants);
         notifyListeners();
       }
     } catch (e) {

@@ -5,9 +5,7 @@ import 'package:restaurant_app/core/provider/list_restaurant_provider/list_resta
 class ListRestaurantProvider extends ChangeNotifier {
   final ApiService _apiService;
 
-  ListRestaurantProvider(this._apiService) {
-    getListRestaurant();
-  }
+  ListRestaurantProvider(this._apiService);
 
   ListRestaurantState _state = ListRestaurantInitial();
 
@@ -26,7 +24,9 @@ class ListRestaurantProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      _state = ListRestaurantFailure(message: e.toString());
+      _state = ListRestaurantFailure(
+        message: e.toString().replaceAll('Exception: ', ''),
+      );
       notifyListeners();
     }
   }

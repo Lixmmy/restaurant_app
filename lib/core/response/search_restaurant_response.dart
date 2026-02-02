@@ -3,7 +3,7 @@ import 'package:restaurant_app/core/model/restaurants.dart';
 class SearchRestaurantResponse {
   final bool error;
   final int founded;
-  final List<Restaurants>? restaurants;
+  final List<Restaurants> restaurants;
 
   SearchRestaurantResponse({
     required this.error,
@@ -15,9 +15,11 @@ class SearchRestaurantResponse {
     return SearchRestaurantResponse(
       error: json['error'],
       founded: json['founded'],
-      restaurants: (json['restaurants'] as List<dynamic>?)
-          ?.map((e) => Restaurants.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      restaurants:
+          (json['restaurants'] as List<dynamic>?)
+              ?.map((e) => Restaurants.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          <Restaurants>[],
     );
   }
 }

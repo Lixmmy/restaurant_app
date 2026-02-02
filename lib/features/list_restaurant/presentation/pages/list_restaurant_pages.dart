@@ -23,6 +23,14 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ListRestaurantProvider>().getListRestaurant();
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -42,7 +50,7 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
                 height: 50,
                 child: TextField(
                   controller: _searchController,
-                  onChanged: (value) {
+                  onSubmitted: (value) {
                     setState(() {});
                     if (value.isNotEmpty) {
                       context.read<SearchRestaurantProvider>().searchRestaurant(
@@ -50,6 +58,7 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
                       );
                     }
                   },
+                  textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),

@@ -12,7 +12,9 @@ import 'package:restaurant_app/core/response/search_restaurant_response.dart';
 class ApiService {
   Future<dynamic> _requestGet(String endpoint, String message) async {
     try {
-      Uri uri = Uri(scheme: scheme, host: host, path: endpoint);
+      final fullUrl = '$scheme://$host$endpoint';
+      final uri = Uri.parse(fullUrl);
+
       final Map<String, String> headers = {'Accept': 'application/json'};
 
       final response = await http
@@ -20,6 +22,8 @@ class ApiService {
           .timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed with status code: ${response.statusCode}');
       }
     } on TimeoutException {
       throw Exception('Koneksi timeout, silakan coba lagi.');
@@ -34,7 +38,8 @@ class ApiService {
     Map<String, dynamic> body,
   ) async {
     try {
-      Uri uri = Uri(scheme: scheme, host: host, path: endpoint);
+      final fullUrl = '$scheme://$host$endpoint';
+      final uri = Uri.parse(fullUrl);
       final Map<String, String> headers = {'Content-Type': 'application/json'};
 
       final response = await http
@@ -42,6 +47,8 @@ class ApiService {
           .timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed with status code: ${response.statusCode}');
       }
     } on TimeoutException {
       throw Exception('Koneksi timeout, silakan coba lagi.');
@@ -67,11 +74,28 @@ class ApiService {
   }
 
   Future<SearchRestaurantResponse> searchRestaurant(String query) async {
-    final response = await _requestGet(
-      '$searchRestaurant?q=$query',
-      'Tidak Ada restaurant yang ditemukan',
-    );
-    return SearchRestaurantResponse.fromJson(response);
+    // This function uses a direct http.get call because it has been empirically
+    // proven to be the only reliable method for this specific endpoint
+    // in the user's environment.
+    final String fullUrl =
+        'https://restaurant-api.dicoding.dev/search?q=$query';
+
+    try {
+      final uri = Uri.parse(fullUrl);
+      final Map<String, String> headers = {'Accept': 'application/json'};
+
+      final response = await http
+          .get(uri, headers: headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return SearchRestaurantResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('API call failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Tidak Ada restaurant yang ditemukan');
+    }
   }
 
   Future<AddReviewResponse> addReview(List<Map<String, dynamic>> body) async {

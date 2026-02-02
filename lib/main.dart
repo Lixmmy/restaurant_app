@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/theme/app_theme.dart';
+import 'package:restaurant_app/features/detail_restaurant/presentation/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/features/list_restaurant/presentation/pages/list_restaurant_pages.dart';
 import 'package:restaurant_app/core/provider/list_restaurant_provider/list_restaurant_provider.dart';
 import 'package:restaurant_app/features/static/navigation_route.dart';
@@ -14,6 +16,10 @@ void main() {
         ChangeNotifierProvider(
           create: (context) =>
               ListRestaurantProvider(context.read<ApiService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              DetailRestaurantProvider(context.read<ApiService>()),
         ),
       ],
       child: const MyApp(),
@@ -35,10 +41,12 @@ class MyApp extends StatelessWidget {
       routes: {
         NavigationRoute.listRestaurant.name: (context) =>
             const ListRestaurantPages(),
-        // // todo-04-detail-12: dont forget to change the variable
-        // NavigationRoute.detailRoute.name: (context) => DetailScreen(
-        //       tourismId: ModalRoute.of(context)?.settings.arguments as int,
-        //     ),
+        // todo-04-detail-12: dont forget to change the variable
+        NavigationRoute.detailRestaurant.name: (context) =>
+            DetailRestaurantPages(
+              restaurantId:
+                  ModalRoute.of(context)?.settings.arguments as String,
+            ),
       },
     );
   }

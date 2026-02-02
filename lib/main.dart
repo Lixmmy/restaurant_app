@@ -6,6 +6,7 @@ import 'package:restaurant_app/core/theme/app_theme.dart';
 import 'package:restaurant_app/features/detail_restaurant/presentation/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/features/list_restaurant/presentation/pages/list_restaurant_pages.dart';
 import 'package:restaurant_app/core/provider/list_restaurant_provider/list_restaurant_provider.dart';
+import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_provider.dart';
 import 'package:restaurant_app/features/static/navigation_route.dart';
 
 void main() {
@@ -21,6 +22,10 @@ void main() {
           create: (context) =>
               DetailRestaurantProvider(context.read<ApiService>()),
         ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              SearchRestaurantProvider(context.read<ApiService>()),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -33,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tourism App',
+      title: 'Restaurant App',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,

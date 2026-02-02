@@ -90,40 +90,61 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
               builder: (context, provider, child) {
                 final state = provider.state;
                 if (state is DetailRestaurantSuccess) {
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            state.restaurant.name,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.location_city),
+                              Text(
+                                state.restaurant.address,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.star),
+                              Text(
+                                state.restaurant.rating.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            state.restaurant.description,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  return Center(child: Text(""));
+                }
+              },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Consumer<DetailRestaurantProvider>(
+              builder: (context, provider, child) {
+                final state = provider.state;
+                if (state is DetailRestaurantSuccess) {
                   return Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          state.restaurant.name,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.location_city),
-                            Text(
-                              state.restaurant.address,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.star),
-                            Text(
-                              state.restaurant.rating.toString(),
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          state.restaurant.description,
-                          style: TextStyle(fontSize: 16),
-                        ),
                         Text(
                           "Menu",
                           style: TextStyle(
@@ -154,6 +175,67 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                               child: ListTile(title: Text(drink.name)),
                             );
                           },
+                        ),
+
+                        SizedBox(height: 16),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Center(child: Text(""));
+                }
+              },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Consumer<DetailRestaurantProvider>(
+              builder: (context, provider, child) {
+                final state = provider.state;
+                if (state is DetailRestaurantSuccess) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Reviews",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height:
+                              150, // Added fixed height for horizontal scrolling
+                          child: GridView.builder(
+                            scrollDirection:
+                                Axis.horizontal, // Changed to horizontal scroll
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount:
+                                      1, // One row for horizontal scroll
+                                  childAspectRatio:
+                                      1.0, // Aspect ratio of each item
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
+                                ),
+                            // Removed NeverScrollableScrollPhysics to allow scrolling
+                            shrinkWrap: true,
+                            itemCount: state.restaurant.customerReviews.length,
+                            itemBuilder: (context, index) {
+                              final review =
+                                  state.restaurant.customerReviews[index];
+                              return Card(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(review.name),
+                                    Text(review.review),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),

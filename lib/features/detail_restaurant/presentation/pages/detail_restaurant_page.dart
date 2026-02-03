@@ -307,12 +307,28 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                             itemBuilder: (context, index) {
                               final review =
                                   state.restaurant.customerReviews[index];
-                              return Card(
+                              return Container(
+                                padding: const EdgeInsets.all(8.0),
+                                margin: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 4.0,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(review.name),
-                                    Text(review.review),
+                                    Text("Name : ${review.name}"),
+                                    SizedBox(height: 8),
+                                    Text("Review : ${review.review}"),
                                   ],
                                 ),
                               );
@@ -332,42 +348,80 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
           SliverToBoxAdapter(
             child: Consumer<AddReviewProvider>(
               builder: (context, value, child) {
-                return ElevatedButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return SizedBox(
-                          child: Column(
-                            children: [
-                              TextField(
-                                controller: _nameController,
-                                decoration: InputDecoration(labelText: "Name"),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: SizedBox(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Add Review",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    "Name",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  TextField(
+                                    controller: _nameController,
+                                    decoration: InputDecoration(
+                                      labelText: "Name",
+                                    ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    "Review",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  TextField(
+                                    controller: _reviewController,
+                                    decoration: InputDecoration(
+                                      labelText: "Review",
+                                    ),
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      context
+                                          .read<AddReviewProvider>()
+                                          .addReview(
+                                            widget.restaurantId,
+                                            _nameController.text,
+                                            _reviewController.text,
+                                          );
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Add Review"),
+                                  ),
+                                ],
                               ),
-                              TextField(
-                                controller: _reviewController,
-                                decoration: InputDecoration(
-                                  labelText: "Review",
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.read<AddReviewProvider>().addReview(
-                                    widget.restaurantId,
-                                    _nameController.text,
-                                    _reviewController.text,
-                                  );
-                                  Navigator.pop(context);
-                                },
-                                child: Text("Add Review"),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Text("Add Review"),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text("Add Review"),
+                  ),
                 );
               },
             ),

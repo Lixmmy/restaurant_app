@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,7 @@ class ListRestaurantPages extends StatefulWidget {
 
 class _ListRestaurantPagesState extends State<ListRestaurantPages> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -50,13 +53,16 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
                 height: 50,
                 child: TextField(
                   controller: _searchController,
-                  onSubmitted: (value) {
+                  onChanged: (value) {
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      if (value.isNotEmpty) {
+                        context
+                            .read<SearchRestaurantProvider>()
+                            .searchRestaurant(value);
+                      }
+                    });
                     setState(() {});
-                    if (value.isNotEmpty) {
-                      context.read<SearchRestaurantProvider>().searchRestaurant(
-                        value,
-                      );
-                    }
                   },
                   textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
@@ -178,12 +184,13 @@ class _DefaultContent extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => DetailRestaurantPages(
                                 restaurantId: restaurant.id,
+                                heroTag: 'carousel-${restaurant.pictureId}',
                               ),
                             ),
                           );
                         },
                         child: Hero(
-                          tag: restaurant.pictureId,
+                          tag: 'carousel-${restaurant.pictureId}',
                           child: Image.network(
                             "https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}",
                             width: double.infinity,

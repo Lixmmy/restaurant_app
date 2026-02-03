@@ -14,8 +14,10 @@ class RestaurantListCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                DetailRestaurantPages(restaurantId: restaurant.id),
+            builder: (context) => DetailRestaurantPages(
+              restaurantId: restaurant.id,
+              heroTag: 'list-${restaurant.pictureId}',
+            ),
           ),
         );
       },
@@ -37,7 +39,7 @@ class RestaurantListCard extends StatelessWidget {
                   child: SizedBox(
                     height: 100,
                     child: Hero(
-                      tag: restaurant.pictureId,
+                      tag: 'list-${restaurant.pictureId}',
                       child: Image.network(
                         "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
                         fit: BoxFit.cover,

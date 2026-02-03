@@ -11,11 +11,11 @@ class AddReviewProvider extends ChangeNotifier {
 
   AddReviewState get state => _state;
 
-  Future<void> addReview(List<Map<String, dynamic>> body) async {
+  Future<void> addReview(String id, String name, String review) async {
     try {
       _state = AddReviewLoading();
       notifyListeners();
-      final response = await _apiService.addReview(body);
+      final response = await _apiService.addReview(id, name, review);
       if (response.error) {
         _state = AddReviewFailure(message: response.message);
         notifyListeners();

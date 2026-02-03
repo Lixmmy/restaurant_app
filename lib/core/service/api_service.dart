@@ -10,10 +10,18 @@ import 'package:restaurant_app/core/response/list_restaurants_response.dart';
 import 'package:restaurant_app/core/response/search_restaurant_response.dart';
 
 class ApiService {
-  Future<dynamic> _requestGet(String endpoint, String message) async {
+  Future<dynamic> _requestGet(
+    String endpoint,
+    String message, {
+    String? queryParameters,
+  }) async {
     try {
-      final fullUrl = '$scheme://$host$endpoint';
-      final uri = Uri.parse(fullUrl);
+      Uri uri = Uri(
+        scheme: scheme,
+        host: host,
+        path: endpoint,
+        queryParameters: {'q': queryParameters},
+      );
 
       final Map<String, String> headers = {'Accept': 'application/json'};
 
@@ -73,36 +81,24 @@ class ApiService {
     return DetailRestaurantResponse.fromJson(response);
   }
 
-  Future<SearchRestaurantResponse> searchRestaurant(String query) async {
-    // This function uses a direct http.get call because it has been empirically
-    // proven to be the only reliable method for this specific endpoint
-    // in the user's environment.
-    final String fullUrl =
-        'https://restaurant-api.dicoding.dev/search?q=$query';
-
-    try {
-      final uri = Uri.parse(fullUrl);
-      final Map<String, String> headers = {'Accept': 'application/json'};
-
-      final response = await http
-          .get(uri, headers: headers)
-          .timeout(const Duration(seconds: 30));
-
-      if (response.statusCode == 200) {
-        return SearchRestaurantResponse.fromJson(jsonDecode(response.body));
-      } else {
-        throw Exception('API call failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Tidak Ada restaurant yang ditemukan');
-    }
+  Future<SearchRestaurantResponse> getSearchRestaurant(String query) async {
+    final response = await _requestGet(
+      searchRestaurant,
+      'Tidak Ada restaurant yang ditemukan',
+      queryParameters: query,
+    );
+    return SearchRestaurantResponse.fromJson(response);
   }
 
-  Future<AddReviewResponse> addReview(List<Map<String, dynamic>> body) async {
+  Future<AddReviewResponse> addReview(
+    String id,
+    String name,
+    String review,
+  ) async {
     final response = await _requestPost(
       reviewRestaurant,
       'Gagal menambahkan review',
-      {'customerReviews': body},
+      {'id': id, 'name': name, 'review': review},
     );
     return AddReviewResponse.fromJson(response);
   }

@@ -15,7 +15,7 @@ class SearchRestaurantProvider extends ChangeNotifier {
     try {
       _state = SearchRestaurantLoading();
       notifyListeners();
-      final response = await _apiService.searchRestaurant(query);
+      final response = await _apiService.getSearchRestaurant(query);
       if (response.error) {
         _state = SearchRestaurantFailure(
           message: 'Tidak ada restaurant yang ditemukan',

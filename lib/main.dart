@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/core/provider/add_review_provider/add_review_provider.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/theme/app_theme.dart';
@@ -26,6 +27,9 @@ void main() {
           create: (context) =>
               SearchRestaurantProvider(context.read<ApiService>()),
         ),
+        ChangeNotifierProvider(
+          create: (context) => AddReviewProvider(context.read<ApiService>()),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -51,6 +55,7 @@ class MyApp extends StatelessWidget {
             DetailRestaurantPages(
               restaurantId:
                   ModalRoute.of(context)?.settings.arguments as String,
+              heroTag: ModalRoute.of(context)?.settings.arguments as String,
             ),
       },
     );

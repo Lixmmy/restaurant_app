@@ -24,9 +24,7 @@ class ListRestaurantProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      _state = ListRestaurantFailure(
-        message: e.toString().replaceAll('Exception: ', ''),
-      );
+      _state = ListRestaurantFailure(message: e.toString());
       notifyListeners();
     }
   }

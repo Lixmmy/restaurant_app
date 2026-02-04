@@ -1,5 +1,5 @@
 class Restaurants {
-   final String id;
+  final String id;
   final String name;
   final String description;
   final String pictureId;
@@ -14,7 +14,7 @@ class Restaurants {
     required this.city,
     required this.rating,
   });
- factory Restaurants.fromJson(Map<String, dynamic> json) {
+  factory Restaurants.fromJson(Map<String, dynamic> json) {
     return Restaurants(
       id: json['id'],
       name: json['name'],

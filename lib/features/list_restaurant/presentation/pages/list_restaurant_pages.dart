@@ -44,54 +44,56 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
     return Scaffold(
       appBar: null,
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                height: 50,
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (value) {
-                    if (_debounce?.isActive ?? false) _debounce?.cancel();
-                    _debounce = Timer(const Duration(milliseconds: 500), () {
-                      if (value.isNotEmpty) {
-                        context
-                            .read<SearchRestaurantProvider>()
-                            .searchRestaurant(value);
-                      }
-                    });
-                    setState(() {});
-                  },
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  height: 50,
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (value) {
+                      if (_debounce?.isActive ?? false) _debounce?.cancel();
+                      _debounce = Timer(const Duration(milliseconds: 500), () {
+                        if (value.isNotEmpty) {
+                          context
+                              .read<SearchRestaurantProvider>()
+                              .searchRestaurant(value);
+                        }
+                      });
+                      setState(() {});
+                    },
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      hintText: "Search restaurant",
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {});
+                              },
+                            )
+                          : null,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    hintText: "Search restaurant",
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {});
-                            },
-                          )
-                        : null,
                   ),
                 ),
               ),
-            ),
-            // Conditionally display search results or default content
-            _searchController.text.isEmpty
-                ? const _DefaultContent()
-                : _buildSearchResults(),
-          ],
+              // Conditionally display search results or default content
+              _searchController.text.isEmpty
+                  ? const _DefaultContent()
+                  : _buildSearchResults(),
+            ],
+          ),
         ),
       ),
     );

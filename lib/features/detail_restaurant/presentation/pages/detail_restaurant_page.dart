@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/provider/add_review_provider/add_review_provider.dart';
+import 'package:restaurant_app/core/provider/add_review_provider/add_review_state.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_state.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -38,7 +39,6 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -184,13 +184,13 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                       children: [
                         Text(
                           "Menu",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Divider(),
-                        Text("Foods"),
+                        Text(
+                          "Foods",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         MediaQuery.of(context).size.width < 600
                             ? ListView.builder(
                                 shrinkWrap: true,
@@ -224,7 +224,10 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                                   );
                                 },
                               ),
-                        Text("Drinks"),
+                        Text(
+                          "Drinks",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         MediaQuery.of(context).size.width < 600
                             ? ListView.builder(
                                 shrinkWrap: true,
@@ -281,27 +284,19 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                       children: [
                         Text(
                           "Reviews",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         SizedBox(
-                          height:
-                              150, // Added fixed height for horizontal scrolling
+                          height: 150,
                           child: GridView.builder(
-                            scrollDirection:
-                                Axis.horizontal, // Changed to horizontal scroll
+                            scrollDirection: Axis.horizontal,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount:
-                                      1, // One row for horizontal scroll
-                                  childAspectRatio:
-                                      1.0, // Aspect ratio of each item
+                                  crossAxisCount: 1,
+                                  childAspectRatio: 1.0,
                                   crossAxisSpacing: 16,
                                   mainAxisSpacing: 16,
                                 ),
-                            // Removed NeverScrollableScrollPhysics to allow scrolling
                             shrinkWrap: true,
                             itemCount: state.restaurant.customerReviews.length,
                             itemBuilder: (context, index) {
@@ -311,25 +306,44 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                                 padding: const EdgeInsets.all(8.0),
                                 margin: const EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.surface,
                                   borderRadius: BorderRadius.circular(8.0),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black26,
+                                      color:
+                                          MediaQuery.of(
+                                                context,
+                                              ).platformBrightness ==
+                                              Brightness.light
+                                          ? Colors.black
+                                          : Colors.white,
                                       blurRadius: 4.0,
                                       offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Name : ${review.name}"),
-                                    SizedBox(height: 8),
-                                    Text("Review : ${review.review}"),
-                                  ],
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Name : ${review.name}",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "Review : ${review.review}",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -348,6 +362,10 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
           SliverToBoxAdapter(
             child: Consumer<AddReviewProvider>(
               builder: (context, value, child) {
+                final state = value.state;
+                if (state is AddReviewLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
@@ -401,15 +419,29 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                                   ),
                                   SizedBox(height: 16),
                                   ElevatedButton(
-                                    onPressed: () {
-                                      context
-                                          .read<AddReviewProvider>()
-                                          .addReview(
-                                            widget.restaurantId,
-                                            _nameController.text,
-                                            _reviewController.text,
-                                          );
-                                      Navigator.pop(context);
+                                    onPressed: () async {
+                                      final provider = context
+                                          .read<AddReviewProvider>();
+                                      await provider.addReview(
+                                        widget.restaurantId,
+                                        _nameController.text,
+                                        _reviewController.text,
+                                      );
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text("Success add review"),
+                                          ),
+                                        );
+                                        context
+                                            .read<DetailRestaurantProvider>()
+                                            .getDetailRestaurant(
+                                              widget.restaurantId,
+                                            );
+                                        Navigator.pop(context);
+                                      }
                                     },
                                     child: Text("Add Review"),
                                   ),

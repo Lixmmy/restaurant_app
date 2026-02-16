@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/error/exceptions.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_state.dart';
 
@@ -25,6 +26,9 @@ class SearchRestaurantProvider extends ChangeNotifier {
         _state = SearchRestaurantSuccess(restaurants: response.restaurants);
         notifyListeners();
       }
+    } on NetworkException catch (e) {
+      _state = SearchRestaurantFailure(message: e.message);
+      notifyListeners();
     } catch (e) {
       _state = SearchRestaurantFailure(message: e.toString());
       notifyListeners();

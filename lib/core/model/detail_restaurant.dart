@@ -11,7 +11,7 @@ class DetailRestaurant {
   final String pictureId;
   final List<Category> categories;
   final Menus menus;
-  final double rating;
+  final num rating;
   final List<CustomerReviews> customerReviews;
 
   const DetailRestaurant({
@@ -34,7 +34,7 @@ class DetailRestaurant {
       description: json['description'],
       pictureId: json['pictureId'],
       city: json['city'],
-      rating: json['rating'],
+      rating: (json['rating'] as num).toDouble(),
       address: json['address'],
       categories: (json['categories'] as List<dynamic>)
           .map((e) => Category.fromJson(e as Map<String, dynamic>))

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/core/model/restaurants.dart';
-import 'package:restaurant_app/features/detail_restaurant/presentation/pages/detail_restaurant_page.dart';
+import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
 
 class RestaurantGridCard extends StatelessWidget {
   const RestaurantGridCard({super.key, required this.restaurant});

@@ -4,8 +4,9 @@ import 'package:restaurant_app/core/provider/add_review_provider/add_review_prov
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/theme/app_theme.dart';
-import 'package:restaurant_app/features/detail_restaurant/presentation/pages/detail_restaurant_page.dart';
-import 'package:restaurant_app/features/list_restaurant/presentation/pages/list_restaurant_pages.dart';
+import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
+import 'package:restaurant_app/features/favorite_restaurant/favorite_restaurant_page.dart';
+import 'package:restaurant_app/features/list_restaurant/pages/list_restaurant_pages.dart';
 import 'package:restaurant_app/core/provider/list_restaurant_provider/list_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_provider.dart';
 import 'package:restaurant_app/features/static/navigation_route.dart';
@@ -57,6 +58,8 @@ class MyApp extends StatelessWidget {
                   ModalRoute.of(context)?.settings.arguments as String,
               heroTag: ModalRoute.of(context)?.settings.arguments as String,
             ),
+        NavigationRoute.favoriteRestaurant.name: (context) =>
+            const FavoriteRestaurantPage(),
       },
     );
   }

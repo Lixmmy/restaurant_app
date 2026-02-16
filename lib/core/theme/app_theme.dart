@@ -25,32 +25,32 @@ class AppTheme {
       colorScheme: colorScheme,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       textTheme: TextTheme(
-        titleLarge: TextStyle(
+        titleLarge: GoogleFonts.lato(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
         ),
-        titleMedium: TextStyle(
+        titleMedium: GoogleFonts.lato(
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
         ),
-        titleSmall: TextStyle(
+        titleSmall: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
         ),
-        bodyLarge: TextStyle(
+        bodyLarge: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: GoogleFonts.lato(
           fontSize: 14,
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
         ),
-        bodySmall: TextStyle(
+        bodySmall: GoogleFonts.lato(
           fontSize: 12,
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
@@ -118,38 +118,33 @@ class AppTheme {
       colorScheme: colorScheme,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       textTheme: TextTheme(
-        titleLarge: TextStyle(
+        titleLarge: GoogleFonts.lato(
           fontSize: 24,
-          fontFamily: GoogleFonts.latoTextTheme().titleLarge!.fontFamily,
           fontWeight: FontWeight.bold,
           color: colorScheme.secondary,
         ),
-        titleMedium: TextStyle(
+        titleMedium: GoogleFonts.lato(
           fontSize: 20,
-          fontFamily: GoogleFonts.latoTextTheme().titleMedium!.fontFamily,
           fontWeight: FontWeight.bold,
           color: colorScheme.secondary,
         ),
-        titleSmall: TextStyle(
+        titleSmall: GoogleFonts.lato(
           fontSize: 16,
-          fontFamily: GoogleFonts.latoTextTheme().titleSmall!.fontFamily,
           fontWeight: FontWeight.bold,
           color: colorScheme.secondary,
         ),
-        bodyLarge: TextStyle(
+        bodyLarge: GoogleFonts.lato(
           fontSize: 16,
-          fontFamily: GoogleFonts.latoTextTheme().bodyLarge!.fontFamily,
           fontWeight: FontWeight.bold,
           color: colorScheme.secondary,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: GoogleFonts.lato(
           fontSize: 14,
-          fontFamily: GoogleFonts.latoTextTheme().bodyMedium!.fontFamily,
+          fontWeight: FontWeight.bold,
           color: colorScheme.secondary,
         ),
-        bodySmall: TextStyle(
+        bodySmall: GoogleFonts.lato(
           fontSize: 12,
-          fontFamily: GoogleFonts.latoTextTheme().bodySmall!.fontFamily,
           fontWeight: FontWeight.bold,
           color: colorScheme.secondary,
         ),

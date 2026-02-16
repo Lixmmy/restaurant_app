@@ -133,7 +133,7 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                             children: [
                               Icon(Icons.location_city),
                               Text(
-                                state.restaurant.address,
+                                "${state.restaurant.city}(${state.restaurant.address})",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ],

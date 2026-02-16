@@ -9,9 +9,10 @@ import 'package:restaurant_app/core/provider/list_restaurant_provider/list_resta
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_state.dart'
     as search_state;
-import 'package:restaurant_app/features/detail_restaurant/presentation/pages/detail_restaurant_page.dart';
-import 'package:restaurant_app/features/list_restaurant/presentation/widgets/restaurant_grid_card.dart';
-import 'package:restaurant_app/features/list_restaurant/presentation/widgets/restaurant_list_card.dart';
+import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
+import 'package:restaurant_app/features/favorite_restaurant/favorite_restaurant_page.dart';
+import 'package:restaurant_app/features/list_restaurant/widgets/restaurant_grid_card.dart';
+import 'package:restaurant_app/features/list_restaurant/widgets/restaurant_list_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ListRestaurantPages extends StatefulWidget {
@@ -42,7 +43,47 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: null,
+      appBar: AppBar(title: const Text("Restaurant App")),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.favorite, color: Colors.red),
+              title: const Text('Favorites'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FavoriteRestaurantPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About'),
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationName: 'Restaurant App',
+                  applicationVersion: '1.0.0',
+                  applicationIcon: const Icon(Icons.restaurant),
+                  children: [
+                    const Text('This app is a restaurant listing app.'),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(

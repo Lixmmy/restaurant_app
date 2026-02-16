@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/core/config/config.dart';
 import 'package:restaurant_app/core/config/route_endpoint.dart';
@@ -8,14 +10,35 @@ import 'package:restaurant_app/core/response/add_review_response.dart';
 import 'package:restaurant_app/core/response/detail_restaurant_response.dart';
 import 'package:restaurant_app/core/response/list_restaurants_response.dart';
 import 'package:restaurant_app/core/response/search_restaurant_response.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:restaurant_app/core/error/exceptions.dart';
 
 class ApiService {
+  Future<bool> _ensureInternetConnection() async {
+    if (kIsWeb) {
+      return true;
+    }
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    // ignore: unrelated_type_equality_checks
+    if (connectivityResult == ConnectivityResult.none) {
+      return false;
+    } else {
+      bool hasInternet = await InternetConnection().hasInternetAccess;
+      if (!hasInternet) {
+        throw NetworkException('Tidak ada WIFI atau internet yang tersambung');
+      }
+      return true;
+    }
+  }
+
   Future<dynamic> _requestGet(
     String endpoint,
     String message, {
     String? queryParameters,
   }) async {
     try {
+      await _ensureInternetConnection();
       Uri uri = Uri(
         scheme: scheme,
         host: host,
@@ -33,6 +56,8 @@ class ApiService {
       } else {
         throw Exception('Failed with status code: ${response.statusCode}');
       }
+    } on NetworkException {
+      rethrow;
     } on TimeoutException {
       throw Exception('Koneksi timeout, silakan coba lagi.');
     } catch (e) {
@@ -46,6 +71,7 @@ class ApiService {
     Map<String, dynamic> body,
   ) async {
     try {
+      await _ensureInternetConnection();
       final fullUrl = '$scheme://$host$endpoint';
       final uri = Uri.parse(fullUrl);
       final Map<String, String> headers = {'Content-Type': 'application/json'};
@@ -58,6 +84,8 @@ class ApiService {
       } else {
         throw Exception('Failed with status code: ${response.statusCode}');
       }
+    } on NetworkException {
+      rethrow;
     } on TimeoutException {
       throw Exception('Koneksi timeout, silakan coba lagi.');
     } catch (e) {

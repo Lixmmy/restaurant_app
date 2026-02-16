@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/error/exceptions.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/provider/add_review_provider/add_review_state.dart';
 
@@ -23,6 +24,9 @@ class AddReviewProvider extends ChangeNotifier {
         _state = AddReviewSuccess(customerReviews: response.customerReviews!);
         notifyListeners();
       }
+    } on NetworkException catch (e) {
+      _state = AddReviewFailure(message: e.message);
+      notifyListeners();
     } catch (e) {
       _state = AddReviewFailure(message: e.toString());
       notifyListeners();

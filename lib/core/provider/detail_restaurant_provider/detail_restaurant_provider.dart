@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/error/exceptions.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_state.dart';
 
@@ -23,6 +24,9 @@ class DetailRestaurantProvider extends ChangeNotifier {
         _state = DetailRestaurantSuccess(restaurant: response.restaurant!);
         notifyListeners();
       }
+    } on NetworkException catch (e) {
+      _state = DetailRestaurantFailure(message: e.message);
+      notifyListeners();
     } catch (e) {
       _state = DetailRestaurantFailure(message: e.toString());
       notifyListeners();

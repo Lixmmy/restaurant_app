@@ -4,6 +4,9 @@ import 'package:restaurant_app/core/provider/add_review_provider/add_review_prov
 import 'package:restaurant_app/core/provider/add_review_provider/add_review_state.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_state.dart';
+import 'package:restaurant_app/core/provider/favorite_icon_provider/favorite_icon_provider.dart';
+import 'package:restaurant_app/core/service/local_database_service.dart'; // Import LocalDatabaseService
+import 'package:restaurant_app/features/favorite_icon/favorite_icons.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DetailRestaurantPages extends StatefulWidget {
@@ -50,7 +53,7 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                 final state = provider.state;
                 if (state is DetailRestaurantSuccess) {
                   return Text(
-                    state.restaurant.name,
+                    state.restaurant.restaurants.name,
                     style: TextStyle(color: Colors.white),
                   );
                 } else {
@@ -58,6 +61,28 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                 }
               },
             ),
+            actions: [
+              Consumer<DetailRestaurantProvider>(
+                builder: (context, provider, child) {
+                  final state = provider.state;
+                  if (state is DetailRestaurantSuccess) {
+                    return ChangeNotifierProvider(
+                      create: (context) {
+                        return FavoriteIconProvider(
+                          LocalDatabaseService(), // Instantiate LocalDatabaseService
+                          state.restaurant.restaurants, // Pass the restaurant object
+                        );
+                      },
+                      child: FavoriteIcons(
+                        restaurant: state.restaurant.restaurants,
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+            ],
             centerTitle: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Consumer<DetailRestaurantProvider>(
@@ -83,7 +108,7 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                       child: Hero(
                         tag: widget.heroTag,
                         child: Image.network(
-                          "https://restaurant-api.dicoding.dev/images/large/${state.restaurant.pictureId}",
+                          "https://restaurant-api.dicoding.dev/images/large/${state.restaurant.restaurants.pictureId}",
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
@@ -123,7 +148,7 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            state.restaurant.name,
+                            state.restaurant.restaurants.name,
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -133,7 +158,7 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                             children: [
                               Icon(Icons.location_city),
                               Text(
-                                "${state.restaurant.city}(${state.restaurant.address})",
+                                "${state.restaurant.restaurants.city}(${state.restaurant.address})",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ],
@@ -142,13 +167,13 @@ class _DetailRestaurantPagesState extends State<DetailRestaurantPages> {
                             children: [
                               Icon(Icons.star, color: Colors.amber),
                               Text(
-                                state.restaurant.rating.toString(),
+                                state.restaurant.restaurants.rating.toString(),
                                 style: TextStyle(fontSize: 16),
                               ),
                             ],
                           ),
                           Text(
-                            state.restaurant.description,
+                            state.restaurant.restaurants.description,
                             style: TextStyle(fontSize: 16),
                           ),
                           Divider(),

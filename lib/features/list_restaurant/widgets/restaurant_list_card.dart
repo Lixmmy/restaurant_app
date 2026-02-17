@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import provider
 import 'package:restaurant_app/core/model/restaurants.dart';
+import 'package:restaurant_app/core/provider/local_database_provider/local_database_provider.dart'; // Import LocalDatabaseProvider
 import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
 
 class RestaurantListCard extends StatelessWidget {
@@ -10,8 +12,10 @@ class RestaurantListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        // Make onTap async
+        await Navigator.push(
+          // Await the push
           context,
           MaterialPageRoute(
             builder: (context) => DetailRestaurantPages(
@@ -20,6 +24,10 @@ class RestaurantListCard extends StatelessWidget {
             ),
           ),
         );
+        // After returning from DetailRestaurantPages, force refresh the favorite list
+        // This assumes LocalDatabaseProvider is available in the widget tree above RestaurantListCard
+        // ignore: use_build_context_synchronously
+        context.read<LocalDatabaseProvider>().getRestaurantList();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

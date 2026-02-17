@@ -3,7 +3,6 @@ import 'package:restaurant_app/core/model/restaurants.dart';
 import 'package:restaurant_app/core/service/local_database_service.dart';
 
 class LocalDatabaseProvider extends ChangeNotifier {
-
   final LocalDatabaseService _localDatabaseService;
 
   LocalDatabaseProvider(this._localDatabaseService);
@@ -19,12 +18,13 @@ class LocalDatabaseProvider extends ChangeNotifier {
 
   Future<void> addRestaurant(Restaurants restaurant) async {
     try {
-      final result =   await _localDatabaseService.insertRestaurant(restaurant);
+      final result = await _localDatabaseService.insertRestaurant(restaurant);
       final isError = result == 0;
       if (isError) {
         _message = 'Failed to add restaurant';
-      }else {
+      } else {
         _message = 'Restaurant added to favorites';
+        getRestaurantList();
       }
     } catch (e) {
       _message = 'Failed to add restaurant: $e';
@@ -36,18 +36,23 @@ class LocalDatabaseProvider extends ChangeNotifier {
     try {
       final result = await _localDatabaseService.getAllRestaurants();
       _restaurants = result;
+      if (result.isEmpty) {
+        _message = 'No favorite restaurants found';
+      } else {
+        _message = 'Successfully loaded all restaurants';
+      }
       _restaurant = null;
-      _message = 'Successfully loaded all restaurants';
       notifyListeners();
     } catch (e) {
       _message = 'Failed to load all restaurants: $e';
       notifyListeners();
     }
   }
-  
+
   Future<void> getRestaurantById(String id) async {
     try {
       final result = await _localDatabaseService.getRestaurantById(id);
+      _restaurant = null;
       if (result != null) {
         _restaurant = result;
         _message = 'Successfully loaded restaurant details';
@@ -61,7 +66,7 @@ class LocalDatabaseProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> removeRestaurant(int id) async {
+  Future<void> removeRestaurant(String id) async {
     try {
       final result = await _localDatabaseService.deleteRestaurant(id);
       final isError = result == 0;
@@ -83,5 +88,4 @@ class LocalDatabaseProvider extends ChangeNotifier {
     }
     return false;
   }
-
 }

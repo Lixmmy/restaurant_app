@@ -42,6 +42,7 @@ class LocalDatabaseService {
   Future<List<Restaurants>> getAllRestaurants() async {
     final db = await initDatabase();
     final results = await db.query(_tableName);
+    print("All restaurants: $results");
 
     return results.map((map) => Restaurants.fromJson(map)).toList();
   }
@@ -61,13 +62,13 @@ class LocalDatabaseService {
     }
   }
 
-  Future<int> deleteRestaurant(int id) async {
+  Future<int> deleteRestaurant(String id) async {
     final db = await initDatabase();
-    final results =  await db.delete(
+    final results = await db.delete(
       _tableName,
       where: 'id = ?',
       whereArgs: [id],
     );
-     return results;
+    return results;
   }
 }

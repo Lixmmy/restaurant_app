@@ -9,6 +9,7 @@ import 'package:restaurant_app/core/provider/list_restaurant_provider/list_resta
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_state.dart'
     as search_state;
+import 'package:restaurant_app/core/provider/theme_provider/theme_provicder.dart';
 import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
 import 'package:restaurant_app/features/favorite_restaurant/favorite_restaurant_page.dart';
 import 'package:restaurant_app/features/list_restaurant/widgets/restaurant_grid_card.dart';
@@ -62,6 +63,20 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const FavoriteRestaurantPage(),
+                  ),
+                );
+              },
+            ),
+            Consumer<ThemeProvider>(
+              builder: (context, themeProvider, child) {
+                return ListTile(
+                  leading: const Icon(Icons.dark_mode),
+                  title: const Text('Theme'),
+                  trailing: Switch(
+                    value: themeProvider.themeMode == ThemeMode.dark,
+                    onChanged: (value) {
+                      context.read<ThemeProvider>().toggleTheme(value);
+                    },
                   ),
                 );
               },

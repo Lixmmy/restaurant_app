@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/provider/add_review_provider/add_review_provider.dart';
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
+import 'package:restaurant_app/core/provider/local_database_provider/local_database_provider.dart';
+import 'package:restaurant_app/core/provider/theme_provider/theme_provicder.dart';
 import 'package:restaurant_app/core/service/api_service.dart';
+import 'package:restaurant_app/core/service/local_database_service.dart';
 import 'package:restaurant_app/core/theme/app_theme.dart';
 import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
 import 'package:restaurant_app/features/favorite_restaurant/favorite_restaurant_page.dart';
@@ -16,6 +19,12 @@ void main() {
     MultiProvider(
       providers: [
         Provider(create: (context) => ApiService()),
+        Provider(create: (context) => LocalDatabaseService()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(
+          create: (context) =>
+              LocalDatabaseProvider(context.read<LocalDatabaseService>()),
+        ),
         ChangeNotifierProvider(
           create: (context) =>
               ListRestaurantProvider(context.read<ApiService>()),
@@ -42,24 +51,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Restaurant App',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      initialRoute: NavigationRoute.listRestaurant.name,
-      routes: {
-        NavigationRoute.listRestaurant.name: (context) =>
-            const ListRestaurantPages(),
-        // todo-04-detail-12: dont forget to change the variable
-        NavigationRoute.detailRestaurant.name: (context) =>
-            DetailRestaurantPages(
-              restaurantId:
-                  ModalRoute.of(context)?.settings.arguments as String,
-              heroTag: ModalRoute.of(context)?.settings.arguments as String,
-            ),
-        NavigationRoute.favoriteRestaurant.name: (context) =>
-            const FavoriteRestaurantPage(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Restaurant App',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          debugShowCheckedModeBanner: false,
+          initialRoute: NavigationRoute.listRestaurant.name,
+          routes: {
+            NavigationRoute.listRestaurant.name: (context) =>
+                const ListRestaurantPages(),
+            // todo-04-detail-12: dont forget to change the variable
+            NavigationRoute.detailRestaurant.name: (context) =>
+                DetailRestaurantPages(
+                  restaurantId:
+                      ModalRoute.of(context)?.settings.arguments as String,
+                  heroTag: ModalRoute.of(context)?.settings.arguments as String,
+                ),
+            NavigationRoute.favoriteRestaurant.name: (context) =>
+                const FavoriteRestaurantPage(),
+          },
+        );
       },
     );
   }

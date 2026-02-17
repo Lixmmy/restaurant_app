@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/model/restaurants.dart';
+import 'package:restaurant_app/core/provider/local_database_provider/local_database_provider.dart';
 import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
 
 class RestaurantGridCard extends StatelessWidget {
@@ -10,8 +12,8 @@ class RestaurantGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailRestaurantPages(
@@ -20,6 +22,8 @@ class RestaurantGridCard extends StatelessWidget {
             ),
           ),
         );
+        // ignore: use_build_context_synchronously
+        context.read<LocalDatabaseProvider>().getRestaurantList();
       },
       child: Container(
         decoration: BoxDecoration(

@@ -4,8 +4,10 @@ import 'package:restaurant_app/core/provider/add_review_provider/add_review_prov
 import 'package:restaurant_app/core/provider/detail_restaurant_provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/local_database_provider/local_database_provider.dart';
 import 'package:restaurant_app/core/provider/theme_provider/theme_provicder.dart';
+import 'package:restaurant_app/core/provider/reminder_provider/reminder_provider.dart'; // Added
 import 'package:restaurant_app/core/service/api_service.dart';
 import 'package:restaurant_app/core/service/local_database_service.dart';
+import 'package:restaurant_app/core/service/local_notification_service.dart'; // Added
 import 'package:restaurant_app/core/theme/app_theme.dart';
 import 'package:restaurant_app/features/detail_restaurant/detail_restaurant_page.dart';
 import 'package:restaurant_app/features/favorite_restaurant/favorite_restaurant_page.dart';
@@ -14,7 +16,11 @@ import 'package:restaurant_app/core/provider/list_restaurant_provider/list_resta
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_provider.dart';
 import 'package:restaurant_app/features/static/navigation_route.dart';
 
-void main() {
+void main() async { // Changed to async
+  WidgetsFlutterBinding.ensureInitialized(); // Added
+  final LocalNotificationService localNotificationService = LocalNotificationService(); // Added
+  await localNotificationService.init(); // Added
+  await localNotificationService.configureLocalTimeZone(); // Added
   runApp(
     MultiProvider(
       providers: [
@@ -40,6 +46,7 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => AddReviewProvider(context.read<ApiService>()),
         ),
+        ChangeNotifierProvider(create: (context) => ReminderProvider()), // Added
       ],
       child: const MyApp(),
     ),

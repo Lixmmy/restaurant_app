@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/provider/list_restaurant_provider/list_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/list_restaurant_provider/list_restaurant_state.dart'
     as list_state;
+import 'package:restaurant_app/core/provider/reminder_provider/reminder_provider.dart';
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_provider.dart';
 import 'package:restaurant_app/core/provider/search_restaurant_provider/search_restaurant_state.dart'
     as search_state;
@@ -76,6 +77,20 @@ class _ListRestaurantPagesState extends State<ListRestaurantPages> {
                     value: themeProvider.themeMode == ThemeMode.dark,
                     onChanged: (value) {
                       context.read<ThemeProvider>().toggleTheme(value);
+                    },
+                  ),
+                );
+              },
+            ),
+            Consumer<ReminderProvider>(
+              builder: (context, reminderProvider, child) {
+                return ListTile(
+                  leading: const Icon(Icons.notifications),
+                  title: const Text('Reminder'),
+                  trailing: Switch(
+                    value: reminderProvider.isReminderEnabled,
+                    onChanged: (value) {
+                      reminderProvider.toggleReminder(value);
                     },
                   ),
                 );

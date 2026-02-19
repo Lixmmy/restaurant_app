@@ -29,7 +29,15 @@ class ReminderProvider extends ChangeNotifier {
     await prefs.setBool(_reminderKey, value);
 
     if (value) {
-      _scheduleDailyReminder();
+      final bool? granted =
+          await LocalNotificationService().requestPermissions();
+      if (granted != null && granted) {
+        _scheduleDailyReminder();
+      } else {
+        // Handle case where permissions are not granted, e.g., show a message to the user
+        debugPrint('Notification permissions not granted.');
+        _isReminderEnabled = false; // Reset toggle if permissions denied
+      }
     } else {
       _cancelDailyReminder();
     }

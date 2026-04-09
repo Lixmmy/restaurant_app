@@ -42,7 +42,6 @@ class LocalDatabaseService {
   Future<List<Restaurants>> getAllRestaurants() async {
     final db = await initDatabase();
     final results = await db.query(_tableName);
-    print("All restaurants: $results");
 
     return results.map((map) => Restaurants.fromJson(map)).toList();
   }

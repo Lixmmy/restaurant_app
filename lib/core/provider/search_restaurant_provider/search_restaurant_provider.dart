@@ -5,14 +5,18 @@ import 'package:restaurant_app/core/provider/search_restaurant_provider/search_r
 
 class SearchRestaurantProvider extends ChangeNotifier {
   final ApiService _apiService;
+  String _query = '';
 
   SearchRestaurantProvider(this._apiService);
 
   SearchRestaurantState _state = SearchRestaurantInitial();
 
+  String get query => _query;
+
   SearchRestaurantState get state => _state;
 
   Future<void> searchRestaurant(String query) async {
+    _query = query;
     try {
       _state = SearchRestaurantLoading();
       notifyListeners();
@@ -33,5 +37,16 @@ class SearchRestaurantProvider extends ChangeNotifier {
       _state = SearchRestaurantFailure(message: e.toString());
       notifyListeners();
     }
+  }
+
+  void setQuery(String query) {
+    _query = query;
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _query = '';
+    _state = SearchRestaurantInitial();
+    notifyListeners();
   }
 }
